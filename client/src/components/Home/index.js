@@ -13,8 +13,9 @@ import TextField from '@material-ui/core/TextField';
 import Radio from '@material-ui/core/Radio';
 import RadioGroup from '@material-ui/core/RadioGroup';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
-import FormControl from '@material-ui/core/FormControl';
 import Button from '@material-ui/core/Button';
+import FormLabel from '@material-ui/core/FormLabel';
+
 
 
 //Dev mode
@@ -124,19 +125,17 @@ class Home extends Component {
     return body;
   }
 
-
-
-
   render() {
     const { classes } = this.props;
 
     const Review = () => {
-
       const [selectedMovie, setSelectedMovie] = React.useState('');
       const [enteredTitle, setEnteredTitle] = React.useState('');
       const [enteredReview, setEnteredReview] = React.useState('');
       const [selectedRating, setSelectedRating] = React.useState('');
-      const [displayMessage, setDisplayMessage] = React.useState('');
+
+      const [displayWarningMessage, setDisplayWarningMessage] = React.useState('');
+      const [displaySuccessMessage, setDisplaySuccessMessage] = React.useState('');
 
       const handleTitleChange = (e) => {
         console.log(e.target.value)
@@ -155,29 +154,35 @@ class Home extends Component {
         setSelectedRating(e.target.value);
       }
 
+
       const handleSubmit = (e) => {
         console.log(selectedMovie)
         console.log(enteredTitle)
         console.log(enteredReview)
         console.log(selectedRating)
 
-        if(enteredTitle == ""){
-          setDisplayMessage("Please enter your review title");
-        }else if (enteredReview == ""){
-          setDisplayMessage("Please enter your review");
-        }else if (selectedRating == ""){
-          setDisplayMessage("Please select the rating")
-        }else{
-          setDisplayMessage(selectedMovie + "\n" + enteredTitle + "\n" + enteredReview + "\n" + selectedRating + "\n");
+        if (enteredTitle == "") {
+          setDisplayWarningMessage('Please enter your review title!');
+        } else if (enteredReview == "") {
+          setDisplayWarningMessage("Please enter your review!");
+        } else if (selectedRating == "") {
+          setDisplayWarningMessage("Please select the rating!")
+        } else {
+          setDisplayWarningMessage('')
+          setDisplaySuccessMessage({
+            success: "Success! Your review has been received.",
+            movie: "Movie: " + selectedMovie,
+            title: "Review Title: " + enteredTitle,
+            review: "Review: " + enteredReview,
+            rating: "Rating: " + selectedRating
+          })
         }
       }
-
-
 
       return (
         <Grid
           container
-          spacing={8}
+          spacing={6}
           direction="column"
           justifyContent="flex-start"
           alignItems="flex-start"
@@ -186,7 +191,10 @@ class Home extends Component {
         >
           <Grid item>
             <Typography variant="h3">
-              Review a movie!
+              Review a Movie!
+            </Typography>
+            <Typography variant="subtitle2">
+              Project Deliverable #1 by Michael Sheng.
             </Typography>
           </Grid>
 
@@ -200,11 +208,20 @@ class Home extends Component {
               Submit
             </Button>
           </Grid>
-          <Grid>
-            {displayMessage}
-          </Grid>
 
-
+          {displayWarningMessage ?
+             <Grid item>
+              <Typography variant="h3">{displayWarningMessage}</Typography>
+            </Grid>
+            :
+            <Grid item>
+              <Typography variant="h5">{displaySuccessMessage.success}</Typography>
+              <Typography variant="h6">{displaySuccessMessage.movie}</Typography>
+              <Typography variant="h6">{displaySuccessMessage.title}</Typography>
+              <Typography variant="h6">{displaySuccessMessage.review}</Typography>
+              <Typography variant="h6">{displaySuccessMessage.rating}</Typography>
+            </Grid>
+          }
         </Grid>
       )
     }
@@ -213,7 +230,7 @@ class Home extends Component {
       return (
         <Grid item>
           <InputLabel>Select a Movie</InputLabel>
-          <Select onChange={props.onChange}>
+          <Select onChange={props.onChange} value={props.title}>
             <MenuItem value={"Jurassic World Dominion"}>Jurassic World Dominion</MenuItem>
             <MenuItem value={"Lightyear"}>Lightyear</MenuItem>
             <MenuItem value={"Top Gun: Maverick"}>Top Gun: Maverick</MenuItem>
@@ -227,7 +244,7 @@ class Home extends Component {
     const ReviewTitle = (props) => {
       return (
         <Grid item>
-          <TextField id="standard-basic" label="Title" onChange={props.onChange} />
+          <TextField id="standard-basic" label="Review Title" onChange={props.onChange} />
         </Grid>
       )
     }
@@ -236,6 +253,7 @@ class Home extends Component {
       return (
         <Grid item>
           <TextField
+            id="outlined-full-width"
             label="Enter your review here:"
             multiline
             inputProps={{ maxLength: 200 }}
@@ -249,38 +267,37 @@ class Home extends Component {
     const ReviewRating = (props) => {
       return (
         <Grid item>
+          <FormLabel component="legend">Movie Score</FormLabel>
           <RadioGroup row aria-label="position" name="position" defaultValue="top" onChange={props.onChange}>
-            <Radio
+            <FormControlLabel
               value="1"
+              control={<Radio />}
               label="1"
-              labelPlacement="top"
-              inputProps={{ 'aria-label': '1' }}
+              labelPlacement="bottom"
             />
-            <Radio
+            <FormControlLabel
               value="2"
+              control={<Radio />}
               label="2"
-              labelPlacement="top"
-              inputProps={{ 'aria-label': '2' }}
+              labelPlacement="bottom"
             />
-            <Radio
+            <FormControlLabel
               value="3"
+              control={<Radio />}
               label="3"
-              labelPlacement="top"
-              inputProps={{ 'aria-label': '3' }}
+              labelPlacement="bottom"
             />
-            <Radio
+            <FormControlLabel
               value="4"
+              control={<Radio />}
               label="4"
-              labelPlacement="top"
-
-              inputProps={{ 'aria-label': '4' }}
+              labelPlacement="bottom"
             />
-            <Radio
+            <FormControlLabel
               value="5"
+              control={<Radio />}
               label="5"
-              labelPlacement="top"
-
-              inputProps={{ 'aria-label': '5' }}
+              labelPlacement="bottom"
             />
           </RadioGroup>
         </Grid>
@@ -305,7 +322,7 @@ class Home extends Component {
         >
           {this.state.mode === 0 ? (
             <React.Fragment>
-              Welcome to MSCI245
+              Please scroll down to see movie review app!
             </React.Fragment>
           ) : (
             <React.Fragment>
