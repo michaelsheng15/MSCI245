@@ -77,11 +77,6 @@ const styles = theme => ({
 
 });
 
-
-
-
-
-
 class Home extends Component {
   constructor(props) {
     super(props);
@@ -341,7 +336,7 @@ class Home extends Component {
           <Paper
             className={classes.paper}
           >
-            {mainMessage}
+            {/* {mainMessage} */}
             <Review />
 
           </Paper>
