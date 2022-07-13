@@ -19,7 +19,9 @@ import FormLabel from '@material-ui/core/FormLabel';
 
 
 //Dev mode
-const serverURL = "http://ov-research-4.uwaterloo.ca:3055"; //enable for dev mode
+const serverURL = ""; //enable for dev mode
+
+// const serverURL = "http://ec2-18-216-101-119.us-east-2.compute.amazonaws.com:3055"; //enable for dev mode
 
 //Deployment mode instructions
 //const serverURL = "http://ov-research-4.uwaterloo.ca:PORT"; //enable for deployed mode; Change PORT to the port number given to you;
@@ -87,9 +89,8 @@ class Home extends Component {
   };
 
   componentDidMount() {
-    this.loadUserSettings();
+    // this.loadUserSettings();
   }
-
 
   loadUserSettings() {
     this.callApiLoadUserSettings()
@@ -124,13 +125,35 @@ class Home extends Component {
     const { classes } = this.props;
 
     const Review = () => {
+
+      React.useEffect(() => {
+        callApiGetMovies()
+          .then(res => {
+            var parsed = JSON.parse(res.express)
+            setMovies(parsed)
+          })
+      }, [])
+
+      const callApiGetMovies = async () => {
+        const url = serverURL + "/api/getMovies";
+
+        const response = await fetch(url, {
+          method: "POST",
+        })
+        const body = await response.json();
+        if (response.status !== 200) throw Error(body.message);
+        return body;
+      }
+
       const [selectedMovie, setSelectedMovie] = React.useState('');
       const [enteredTitle, setEnteredTitle] = React.useState('');
       const [enteredReview, setEnteredReview] = React.useState('');
       const [selectedRating, setSelectedRating] = React.useState('');
-
       const [displayWarningMessage, setDisplayWarningMessage] = React.useState('');
       const [displaySuccessMessage, setDisplaySuccessMessage] = React.useState('');
+
+      const [movieID, setMovieID] = React.useState('');
+      const [movies, setMovies] = React.useState([])
 
       const handleTitleChange = (e) => {
         console.log(e.target.value)
@@ -138,7 +161,8 @@ class Home extends Component {
       }
       const handleMovieChange = (e) => {
         console.log(e.target.value)
-        setSelectedMovie(e.target.value);
+        setSelectedMovie(e.target.value.name);
+        setMovieID(e.target.value.id)
       }
       const handleBodyChange = (e) => {
         console.log(e.target.value)
@@ -149,14 +173,19 @@ class Home extends Component {
         setSelectedRating(e.target.value);
       }
 
-
       const handleSubmit = (e) => {
-        console.log(selectedMovie)
-        console.log(enteredTitle)
-        console.log(enteredReview)
-        console.log(selectedRating)
+        let add = false;
+        // console.log(selectedMovie)
+        // console.log(enteredTitle)
+        // console.log(enteredReview)
+        // console.log(selectedRating)
+        // console.log(movies);
 
-        if (enteredTitle == "") {
+        
+
+        if (selectedMovie == ""){
+          setDisplayWarningMessage('Please select a movie!');
+        }else if (enteredTitle == "") {
           setDisplayWarningMessage('Please enter your review title!');
         } else if (enteredReview == "") {
           setDisplayWarningMessage("Please enter your review!");
@@ -169,9 +198,38 @@ class Home extends Component {
             movie: "Movie: " + selectedMovie,
             title: "Review Title: " + enteredTitle,
             review: "Review: " + enteredReview,
-            rating: "Rating: " + selectedRating
+            rating: "Rating: " + selectedRating,
+            movieID: "ID: " + movieID
+          })
+          add = true;
+        }
+
+        if(add){
+          callApiAddReview()
+          .then(res => {
+            console.log(res);
           })
         }
+      }
+
+      const callApiAddReview = async () => {
+        const url = serverURL + "/api/addReview";
+
+        const response = await fetch(url, {
+          method: "POST",
+          headers: { 'Content-Type': 'application/json' },
+
+          body: JSON.stringify({
+            movieID: movieID,
+            reviewTitle: enteredTitle, 
+            reviewContent: enteredReview, 
+            reviewScore: selectedRating,
+          })
+
+        })
+        const body = await response.json();
+        if (response.status !== 200) throw Error(body.message);
+        return body;
       }
 
       return (
@@ -189,11 +247,11 @@ class Home extends Component {
               Review a Movie!
             </Typography>
             <Typography variant="subtitle2">
-              Project Deliverable #1 by Michael Sheng.
+              Deliverable #2 by Michael Sheng.
             </Typography>
           </Grid>
 
-          <MovieSelection onChange={handleMovieChange} />
+          <MovieSelection onChange={handleMovieChange} movieList={movies} />
           <ReviewTitle onChange={handleTitleChange} />
           <ReviewBody onChange={handleBodyChange} />
           <ReviewRating onChange={handleScoreChange} />
@@ -205,7 +263,7 @@ class Home extends Component {
           </Grid>
 
           {displayWarningMessage ?
-             <Grid item>
+            <Grid item>
               <Typography variant="h3">{displayWarningMessage}</Typography>
             </Grid>
             :
@@ -215,6 +273,8 @@ class Home extends Component {
               <Typography variant="h6">{displaySuccessMessage.title}</Typography>
               <Typography variant="h6">{displaySuccessMessage.review}</Typography>
               <Typography variant="h6">{displaySuccessMessage.rating}</Typography>
+              <Typography variant="h6">{displaySuccessMessage.movieID}</Typography>
+
             </Grid>
           }
         </Grid>
@@ -226,11 +286,9 @@ class Home extends Component {
         <Grid item>
           <InputLabel>Select a Movie</InputLabel>
           <Select onChange={props.onChange} value={props.title}>
-            <MenuItem value={"Jurassic World Dominion"}>Jurassic World Dominion</MenuItem>
-            <MenuItem value={"Lightyear"}>Lightyear</MenuItem>
-            <MenuItem value={"Top Gun: Maverick"}>Top Gun: Maverick</MenuItem>
-            <MenuItem value={"Doctor Strange in the Multiverse of Madness"}>Doctor Strange in the Multiverse of Madness</MenuItem>
-            <MenuItem value={"Sonic the Hedgehog 2"}>Sonic the Hedgehog 2</MenuItem>
+            {props.movieList.map(function (m) {
+              return <MenuItem value={m}>{m.name}</MenuItem>
+            })}
           </Select>
         </Grid>
       )
