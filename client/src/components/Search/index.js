@@ -5,9 +5,9 @@ import Grid from "@material-ui/core/Grid";
 import Button from '@material-ui/core/Button';
 import { Typography } from '@mui/material';
 
-const serverURL = ""
+// const serverURL = ""
 
-// const serverURL = "http://ec2-18-216-101-119.us-east-2.compute.amazonaws.com:3055";
+const serverURL = "http://ec2-18-216-101-119.us-east-2.compute.amazonaws.com:3055";
 
 const Search = () => {
     const [enteredMovie, setEnteredMovie] = React.useState('');
