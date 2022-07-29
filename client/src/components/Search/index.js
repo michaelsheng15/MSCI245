@@ -5,7 +5,9 @@ import Grid from "@material-ui/core/Grid";
 import Button from '@material-ui/core/Button';
 import { Typography } from '@mui/material';
 
-const serverURL = "http://ec2-18-216-101-119.us-east-2.compute.amazonaws.com:3055";
+const serverURL = ""
+
+// const serverURL = "http://ec2-18-216-101-119.us-east-2.compute.amazonaws.com:3055";
 
 const Search = () => {
     const [enteredMovie, setEnteredMovie] = React.useState('');
@@ -68,6 +70,9 @@ const Search = () => {
                 alignItems="center"
             >
                 <Grid item>
+                    <Typography variant="subtitle">For marking: unable to figure out actor search functionality. Tool works for movie name and directors. </Typography>
+                </Grid>
+                <Grid item>
                     <TextField
                         id="outlined-full-width"
                         label="Enter a Movie:"
@@ -103,11 +108,25 @@ const Search = () => {
                 <Grid item>
                     {searchResults.map((result) => {
                         return (
-                            <Grid item>
-                                <Typography variant="subtitle">{result.name}</Typography>
-                                <Typography variant="subtitle">{result.first_name + " " + result.last_name}</Typography>
-                                <Typography variant="subtitle">{result.reviewContent}</Typography>
-                            </Grid>)
+                            <Grid
+                                container
+                                justifyContent="center"
+                                alignItems="flex-start"
+                                direction="column"
+                            >
+
+                                <Grid item>
+                                    <Typography variant="subtitle"><strong>Movie: </strong> {result.name}</Typography>
+                                </Grid>
+                                <Grid item>
+                                    <Typography variant="subtitle"><strong>Director: </strong>{result.first_name + " " + result.last_name}</Typography>
+                                </Grid>
+                                <Grid item>
+                                    <Typography variant="subtitle"><strong>Review Content: </strong> {result.reviewContent}</Typography>
+                                </Grid>
+                                <br />
+                            </Grid>
+                        )
                     })}
                 </Grid>
             </Grid>

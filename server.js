@@ -132,6 +132,8 @@ app.post('/api/search', (req, res) => {
 
 	let sql = `SELECT DISTINCT name, first_name, last_name, reviewContent FROM movies, Review, directors, movies_directors WHERE name ${movie} AND first_name ${directorFirstName} AND last_name ${directorLastName} AND movies.id = Review.movies_id`
 
+	// AND actors.first_name ${actorFirstName} AND actors.last_name ${actorLastName} AND actors.id = roles.actor_id
+
 	console.log(sql);
 
 	connection.query(sql, data, (error, results, fields) => {
@@ -171,5 +173,5 @@ app.post('/api/findTrailer', (req, res) => {
 	connection.end();
 })
 
-// app.listen(port, () => console.log(`Listening on port ${port}`)); //for the dev version
-app.listen(port, '172.31.31.77'); //for the deployed version, specify the IP address of the server
+app.listen(port, () => console.log(`Listening on port ${port}`)); //for the dev version
+// app.listen(port, '172.31.31.77'); //for the deployed version, specify the IP address of the server

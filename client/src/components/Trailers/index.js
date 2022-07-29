@@ -12,8 +12,9 @@ import { BrowserRouter as Router, Link } from 'react-router-dom';
 //Create a new trailer table that has FK to movies table
 //Users can select a movie and few the corresponding trailer
 //Users can add the link to a trailer for movies that do not have trailers yet
-const serverURL = "http://ec2-18-216-101-119.us-east-2.compute.amazonaws.com:3055"; //enable for dev mode
 
+// const serverURL = "http://ec2-18-216-101-119.us-east-2.compute.amazonaws.com:3055"; //enable for dev mode
+const serverURL = ""
 
 const ViewTrailers = () => {
 
