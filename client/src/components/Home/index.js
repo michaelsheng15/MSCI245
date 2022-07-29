@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
-import CssBaseline from "@material-ui/core/CssBaseline";
+// import CssBaseline from "@mat2erial-ui/core/CssBaseline";
 import { MuiThemeProvider, createTheme } from "@material-ui/core/styles";
 import Grid from "@material-ui/core/Grid";
 import Typography from "@material-ui/core/Typography";
@@ -15,6 +15,8 @@ import RadioGroup from '@material-ui/core/RadioGroup';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Button from '@material-ui/core/Button';
 import FormLabel from '@material-ui/core/FormLabel';
+
+import ButtonAppBar from '../Navigation/ButtonAppBar';
 
 
 
@@ -175,12 +177,6 @@ class Home extends Component {
 
       const handleSubmit = (e) => {
         let add = false;
-        // console.log(selectedMovie)
-        // console.log(enteredTitle)
-        // console.log(enteredReview)
-        // console.log(selectedRating)
-        // console.log(movies);
-
         
 
         if (selectedMovie == ""){
@@ -390,11 +386,9 @@ class Home extends Component {
     return (
       <MuiThemeProvider theme={theme}>
         <div className={classes.root}>
-          <CssBaseline />
-          <Paper
-            className={classes.paper}
-          >
-            {/* {mainMessage} */}
+          {/* <CssBaseline /> */}
+          <Paper className={classes.paper}>
+            <ButtonAppBar />
             <Review />
 
           </Paper>
